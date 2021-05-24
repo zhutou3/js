@@ -1,0 +1,39 @@
+name: txstock
+on:
+  workflow_dispatch:
+  schedule:
+     - cron: '0 7 * * *'
+  watch:
+    types: started
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: github.event.repository.owner.id == github.event.sender.id
+    steps:
+     - name: setup SSH keys and known_hosts
+       run: |
+           mkdir -p ~/.ssh
+           ssh-keyscan github.com >> ~/.ssh/known_hosts
+           ssh-agent -a $SSH_AUTH_SOCK > /dev/null
+           ssh-add - <<< "${{ secrets.ID_RSA }}"
+       env:
+           SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+     - name: clone repository
+       run: git clone git@github.com:kuIoIo/mess.git ~/js
+       env:
+           SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+     - name: Use Node.js 14.x
+       uses: actions/setup-node@v1
+       with:
+          node-version: 14.x
+     - name: npm install
+       run: |
+          cd ~/js
+          npm install
+     - name: 'run 【txstock】'
+       run: |
+         cd ~/js   
+         node Task/txstock.js
+       env:
+         TG_BOT_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
+         TG_USER_ID: ${{ secrets.TG_USER_ID }}
