@@ -32,7 +32,7 @@ jobs:
           cd ~/js
           git checkout ZIYE
           npm install
-     - name: '运行 【sqnovel】'
+     - name: 'run 【sqnovel】'
        run: |
          cd ~/js   
          node Task/shuqi.js
