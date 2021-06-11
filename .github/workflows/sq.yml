@@ -3,7 +3,7 @@ name: sq
 on:
   workflow_dispatch:
   schedule:
-     - cron: '7 * * * *'
+     - cron: '7/30 * * * *'
   watch:
     types: started
 jobs:
