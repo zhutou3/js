@@ -1,16 +1,3 @@
-// ==UserScript==
-// @name         B站番剧字幕翻译(繁转简)
-// @namespace    https://greasyfork.org/zh-CN/users/200067#2
-// @version      1.43
-// @description  字幕翻译(繁转简),去除字幕黑色背景,字幕描边,可自定义字幕样式(HTML代码)
-// @author       不会英语会写点代码的小白
-// @match        https://www.bilibili.com/bangumi/play/*
-// @run-at       document-start
-// @grant        unsafeWindow
-// @grant        GM_getValue
-// @grant        GM_setValue
-// @grant        GM_deleteValue
-// ==/UserScript==
 const TAG='B站番剧字幕翻译(繁转简):';
 let main=($)=>{
     'use strict';
