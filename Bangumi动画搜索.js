@@ -227,7 +227,7 @@ $(function() {
                     /* ========= 跳转樱花动漫(yhdm) 搜索页 =========*/
                     addEle('a', '樱花动漫(yhdm)', scAnimeNames, 'http://www.yhdm.io/search/') +
                     /* ========= 跳转AGE动漫 搜索页 =========*/
-                    addEle('a', 'AGE动漫', scAnimeNames, 'https://www.agefans.cc/search?query=', '&page=') +
+                    addEle('a', 'AGE动漫', scAnimeNames, 'https://www.agemys.com/search?query=', '&page=') +
                     /* ========= 跳转飞极速在线 搜索页 =========*/
                     addEle('a', '飞极速在线', scAnimeNames, 'http://feijisu7.com/search/') +
                     /* ========= 跳转妮可动漫 搜索页 =========*/
