@@ -232,8 +232,8 @@ $(function() {
                     addEle('a', '飞极速在线', scAnimeNames, 'http://feijisu7.com/search/') +
                     /* ========= 跳转妮可动漫 搜索页 =========*/
                     addEle('a', '妮可动漫', scAnimeNames, 'http://www.nicotv.me/video/search/', '.html') +
-                    /* ========= 跳转 巴哈姆特動畫瘋 搜索页 =========*/
-                    addEle('a', '動畫瘋', animeNames, 'https://ani.gamer.com.tw/search.php?kw=') + '</p>')
+                    /* ========= 跳转 森之屋 搜索页 =========*/
+                    addEle('a', '森之屋', animeNames, 'https://senfun.net/search.html?wd=') + '</p>')
                 /* ================ 跳转【在线播放】网站End ================*/
                 /* ================ 跳转【漫画类】网站Start ================*/
             $(ele).append('<p>' + '<label>' + '<input type="checkbox" name="Manga" class="btDownload Manga" value="漫画相关">' + '漫画类: ' + '</label>' +
