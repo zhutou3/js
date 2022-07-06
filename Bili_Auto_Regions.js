@@ -119,38 +119,36 @@ async function SwitchRegion(play) {
 
 function SwitchStatus(status, original, newPolicy) {
 	if (status && typeof original !== 'number') {
-		return `${original}  switched to  ${newPolicy} `;
+		return `${original}  =>  ${newPolicy}  =>  🟢`;
 	} else if (original === 2) {
-		return `切换失败, 策略组名未填写或填写有误 `
+		return `切换失败, 策略组名未填写或填写有误 ⚠️`
 	} else if (original === 3) {
-		return `切换失败, 不支持您的VPN应用版本 `
+		return `切换失败, 不支持您的VPN应用版本 ⚠️`
 	} else if (status === 0) {
-		return `切换失败, 子策略名未填写或填写有误 `
+		return `切换失败, 子策略名未填写或填写有误 ⚠️`
 	} else {
-		return `策略切换失败, 未知错误 `
+		return `策略切换失败, 未知错误 ⚠️`
 	}
 }
 
 function EnvInfo() {
-	const url = $request.url;
 	if (typeof($response) !== 'undefined') {
-		const raw = JSON.parse($response.body || "{}");
+		const raw = JSON.parse($response.body);
 		const data = raw.data || raw.result || {};
-		const t1 = (data.series && data.series.series_title) || data.title;
-		const t2 = raw.code === -404 ? -404 : null;
-		SwitchRegion(t1 || t2)
+		SwitchRegion(data.title || (raw.code === -404 ? -404 : null))
 			.then(s => s ? $done({
-				status: $.isQuanX ? "HTTP/1.1 307" :307,
+				status: $.isQuanX ? "HTTP/1.1 408 Request Timeout" : 408,
 				headers: {
-					Location: url
+					Connection: "close"
 				},
 				body: "{}"
 			}) : QueryRating(raw, data));
 	} else {
+		const raw = $request.url;
 		const res = {
-			url: url.replace(/%20(%E6%B8%AF|%E5%8F%B0|%E4%B8%AD)&/g, '&')
+			url: raw.replace(/%20(%E6%B8%AF|%E5%8F%B0|%E4%B8%AD)&/g, '&')
 		};
-		SwitchRegion(url).then(() => $done(res));
+		SwitchRegion(raw).then(() => $done(res));
 	}
 }
 
@@ -159,7 +157,7 @@ async function QueryRating(body, play) {
 		const ratingEnabled = $.read('BiliDoubanRating') === 'false';
 		if (!ratingEnabled && play.title && body.data && body.data.badge_info) {
 			const [t1, t2] = await Promise.all([
-				GetRawInfo(play.title.replace(/\uff08\u50c5[\u4e00-\u9fa5]+\u5340\uff09/, '')),
+				GetRawInfo(play.title),
 				GetRawInfo(play.origin_name)
 			]);
 			const exYear = body.data.publish.release_date_show.split(/^(\d{4})/)[1];
