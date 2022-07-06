@@ -1,4 +1,5 @@
 /********************************
+VSCO & Fileball & 1Blocker
 [Script]
 ^https?:\/\/api\.revenuecat\.com\/v\d\/subscribers\/ url script-request-header https://raw.githubusercontent.com/NobyDa/Script/master/QuantumultX/File/vsco.js
 ^https?:\/\/api\.revenuecat\.com\/v\d\/subscribers\/ url script-response-body https://raw.githubusercontent.com/NobyDa/Script/master/QuantumultX/File/vsco.js
