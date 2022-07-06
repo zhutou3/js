@@ -83,7 +83,7 @@ async function SwitchRegion(play) {
 	const DF = $.read('BiliArea_DF') || '𝗚𝗹𝗼𝗯𝗮𝗹'; //Sub-policy name used after region is blocked(e.g. url 404)
 	const off = $.read('BiliArea_disabled') || ''; //WiFi blacklist(disable region change), separated by commas.
 	const current = await $.getPolicy(Group);
-	const area = (() => {
+        const area = (() => {
 		let select;
 		if (/\u50c5[\u4e00-\u9fa5]+\u6e2f|%20%E6%B8%AF&/.test(play)) {
 			const test = /\u50c5[\u4e00-\u9fa5]+\u53f0/.test(play);
@@ -229,7 +229,7 @@ function GetRawInfo(t) {
 			} else {
 				if (/\u767b\u5f55<\/a>\u540e\u91cd\u8bd5\u3002/.test(data)) $.is403 = true;
 				let s = data.replace(/\n| |&#\d{2}/g, '')
-					.match(/\[(\u7535\u5f71|\u7535\u89c6\u5267)\].+?subject-cast\">.+?<\/span>/g) || [];
+					.match(/\[\u7535\u5f71\].+?subject-cast\">.+?<\/span>/g) || [];
 				for (let i = 0; i < s.length; i++) {
 					res.push({
 						name: s[i].split(/\}\)">(.+?)<\/a>/)[1],
