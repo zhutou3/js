@@ -119,7 +119,7 @@ async function SwitchRegion(play) {
 
 function SwitchStatus(status, original, newPolicy) {
 	if (status && typeof original !== 'number') {
-		return `${original}  transfered  ${newPolicy} `;
+		return `${original}  switched to  ${newPolicy} `;
 	} else if (original === 2) {
 		return `切换失败, 策略组名未填写或填写有误 `
 	} else if (original === 3) {
