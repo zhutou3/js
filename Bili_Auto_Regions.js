@@ -62,10 +62,10 @@ ip-cidr, 203.107.1.1/24, reject
 Loon 远程脚本配置 :
 ****************************
 [Script]
-http-response ^https:\/\/ap(p|i)\.bili(bili|api)\.(com|net)\/(pgc\/view\/v\d\/app\/season|x\/offline\/version)\? script-path=https://raw.githubusercontent.com/NobyDa/Script/master/Surge/JS/Bili_Auto_Regions.js, requires-body=true, tag=bili自动地区
+http-response ^https:\/\/ap(p|i)\.bili(bili|api)\.(com|net)\/(pgc\/view\/v\d\/app\/season|x\/v\d\/search\/defaultwords)\?access_key script-path=https://raw.githubusercontent.com/NobyDa/Script/master/Surge/JS/Bili_Auto_Regions.js, requires-body=true, tag=bili自动地区
 
 #可选, 适用于搜索指定地区的番剧
-http-request ^https:\/\/ap(p|i)\.bili(bili|api)\.(com|net)\/x\/v\d\/search(\/type)?\?.+?%20(%E6%B8%AF|%E5%8F%B0|%E4%B8%AD)& script-path=https://raw.githubusercontent.com/NobyDa/Script/master/Surge/JS/Bili_Auto_Regions.js, tag=bili自动地区(搜索)
+http-request ^https:\/\/ap(p|i)\.bili(bili|api)\.(com|net)\/x\/v\d\/search(\/type)?\?.+?%20(%E6%B8%AF|%E5%8F%B0|%E4%B8%AD)& script-path=https://raw.githubusercontent.com/NobyDa/Script/master/Surge/JS/Bili_Auto_Regions.js, requires-body=true, tag=bili自动地区(搜索)
 
 [Mitm]
 hostname = ap?.bili*i.com, ap?.bili*i.net
@@ -132,25 +132,23 @@ function SwitchStatus(status, original, newPolicy) {
 }
 
 function EnvInfo() {
-	const url = $request.url;
 	if (typeof($response) !== 'undefined') {
-		const raw = JSON.parse($response.body || "{}");
+		const raw = JSON.parse($response.body);
 		const data = raw.data || raw.result || {};
-		const t1 = (data.series && data.series.series_title) || data.title;
-		const t2 = raw.code === -404 ? -404 : null;
-		SwitchRegion(t1 || t2)
+		SwitchRegion(data.title || (raw.code === -404 ? -404 : null))
 			.then(s => s ? $done({
-				status: $.isQuanX ? "HTTP/1.1 307" :307,
+				status: $.isQuanX ? "HTTP/1.1 408 Request Timeout" : 408,
 				headers: {
-					Location: url
+					Connection: "close"
 				},
 				body: "{}"
 			}) : QueryRating(raw, data));
 	} else {
+		const raw = $request.url;
 		const res = {
-			url: url.replace(/%20(%E6%B8%AF|%E5%8F%B0|%E4%B8%AD)&/g, '&')
+			url: raw.replace(/%20(%E6%B8%AF|%E5%8F%B0|%E4%B8%AD)&/g, '&')
 		};
-		SwitchRegion(url).then(() => $done(res));
+		SwitchRegion(raw).then(() => $done(res));
 	}
 }
 
@@ -159,7 +157,7 @@ async function QueryRating(body, play) {
 		const ratingEnabled = $.read('BiliDoubanRating') === 'false';
 		if (!ratingEnabled && play.title && body.data && body.data.badge_info) {
 			const [t1, t2] = await Promise.all([
-				GetRawInfo(play.title.replace(/\uff08\u50c5[\u4e00-\u9fa5]+\u5340\uff09/, '')),
+				GetRawInfo(play.title),
 				GetRawInfo(play.origin_name)
 			]);
 			const exYear = body.data.publish.release_date_show.split(/^(\d{4})/)[1];
@@ -231,7 +229,7 @@ function GetRawInfo(t) {
 			} else {
 				if (/\u767b\u5f55<\/a>\u540e\u91cd\u8bd5\u3002/.test(data)) $.is403 = true;
 				let s = data.replace(/\n| |&#\d{2}/g, '')
-					.match(/\[(\u7535\u5f71|\u7535\u89c6\u5267)\].+?subject-cast\">.+?<\/span>/g) || [];
+					.match(/\[\u7535\u5f71\].+?subject-cast\">.+?<\/span>/g) || [];
 				for (let i = 0; i < s.length; i++) {
 					res.push({
 						name: s[i].split(/\}\)">(.+?)<\/a>/)[1],
